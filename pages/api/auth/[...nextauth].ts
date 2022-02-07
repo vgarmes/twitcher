@@ -4,7 +4,7 @@ import TwitchProvider from 'next-auth/providers/twitch';
 export default NextAuth({
   providers: [
     TwitchProvider({
-      clientId: process.env.TWITCH_CLIENT_ID!,
+      clientId: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
       clientSecret: process.env.TWITCH_CLIENT_SECRET!,
     }),
   ],
