@@ -1,3 +1,7 @@
+# Twitcher
+
+Twitcher aims to offer the YouTube experience with Twitch's videos on demand. Watch your favorite streamer's latest videos and create playlists to watch them later.
+
 ## NextAuth configuration
 
 1. Register your application at the [Twitch developer portal](https://dev.twitch.tv/).
