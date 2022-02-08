@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
+import Layout from '@/layouts/article';
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -21,17 +22,11 @@ const Home: NextPage = () => {
   }
   console.log(session);
   return (
-    <div>
-      <Head>
-        <title>Twitcher</title>
-        <meta name="description" content="Twitch videos on demand" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
+    <Layout>
       <main></main>
 
       <footer></footer>
-    </div>
+    </Layout>
   );
 };
 
