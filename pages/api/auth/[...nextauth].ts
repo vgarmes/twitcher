@@ -1,5 +1,59 @@
+import { User } from 'next-auth/core/types';
+import { JWT } from 'next-auth/jwt';
 import NextAuth from 'next-auth/next';
 import TwitchProvider from 'next-auth/providers/twitch';
+
+interface Token extends JWT {
+  refreshToken: string;
+  accessToken: string;
+  accessTokenExpires: number;
+  user: User;
+}
+/**
+ * Takes a token, and returns a new token with updated
+ * `accessToken` and `accessTokenExpires`. If an error occurs,
+ * returns the old token and an error property
+ */
+
+async function refreshAccessToken(token: Token) {
+  try {
+    const url =
+      'https://id.twitch.tv/oauth2/token' +
+      new URLSearchParams({
+        client_id: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
+        client_secret: process.env.TWITCH_CLIENT_SECRET!,
+        grant_type: 'refresh_token',
+        refresh_token: token.refreshToken,
+      });
+
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      method: 'POST',
+    });
+
+    const refreshedTokens = await response.json();
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: refreshedTokens.expires_at,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      ...token,
+      error: 'RefreshAccessTokenError',
+    };
+  }
+}
 
 export default NextAuth({
   providers: [
@@ -9,16 +63,33 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user, account }) {
+      // Initial sign in
+      if (account && user) {
+        /* console.log(token);
+        console.log(user);
+        console.log(account); */
+        return {
+          accessToken: account.access_token,
+          accessTokenExpires: account.expires_at,
+          refreshToken: account.refresh_token,
+          user,
+        };
       }
-      return token;
+
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < (token.accessTokenExpires as number) * 1000) {
+        return token;
+      }
+
+      // Access token has expired, try to update it
+      return refreshAccessToken(token as Token);
     },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
+    async session({ session, token }) {
+      session.user = token.user as User;
       session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+      session.accessTokenExpires = token.accessTokenExpires;
       return session;
     },
   },
