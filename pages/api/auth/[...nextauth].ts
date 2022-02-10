@@ -18,7 +18,7 @@ interface Token extends JWT {
 async function refreshAccessToken(token: Token) {
   try {
     const url =
-      'https://id.twitch.tv/oauth2/token' +
+      'https://id.twitch.tv/oauth2/token?' +
       new URLSearchParams({
         client_id: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
         client_secret: process.env.TWITCH_CLIENT_SECRET!,
@@ -42,7 +42,7 @@ async function refreshAccessToken(token: Token) {
     return {
       ...token,
       accessToken: refreshedTokens.access_token,
-      accessTokenExpires: refreshedTokens.expires_at,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
       refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
     };
   } catch (error) {
@@ -66,9 +66,6 @@ export default NextAuth({
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
-        /* console.log(token);
-        console.log(user);
-        console.log(account); */
         return {
           accessToken: account.access_token,
           accessTokenExpires: account.expires_at,
