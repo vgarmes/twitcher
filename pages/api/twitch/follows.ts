@@ -7,6 +7,8 @@ import { getAuthHeaders } from '../../../utils/getAuthHeaders';
 import { getToken } from 'next-auth/jwt';
 import { Follows, Token } from '../../../types';
 
+// TODO: Add pagination support
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -42,7 +44,11 @@ export default async function handler(
     );
 
     const usersResponse = await axios.get(usersUrl + queryParams, { headers });
-    res.status(StatusCodes.OK).json(usersResponse.data);
+    res.status(StatusCodes.OK).json({
+      followed_users: usersResponse.data?.data,
+      total: followsResponse.data.total,
+      pagination: followsResponse.data.pagination,
+    });
   } catch (error) {
     res.status(500).json(error);
   }
