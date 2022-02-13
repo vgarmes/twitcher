@@ -1,14 +1,8 @@
 import { User } from 'next-auth/core/types';
-import { JWT } from 'next-auth/jwt';
+import { Token } from '../../../types';
 import NextAuth from 'next-auth/next';
 import TwitchProvider from 'next-auth/providers/twitch';
 
-interface Token extends JWT {
-  refreshToken: string;
-  accessToken: string;
-  accessTokenExpires: number;
-  user: User;
-}
 /**
  * Takes a token, and returns a new token with updated
  * `accessToken` and `accessTokenExpires`. If an error occurs,
@@ -84,9 +78,6 @@ export default NextAuth({
     },
     async session({ session, token }) {
       session.user = token.user as User;
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
-      session.accessTokenExpires = token.accessTokenExpires;
       return session;
     },
   },
