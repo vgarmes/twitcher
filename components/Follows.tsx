@@ -1,6 +1,7 @@
 import useSWR from 'swr';
 import { useFollows } from '../hooks/twitch-api';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const Follows = () => {
   const { data, error } = useFollows();
@@ -19,16 +20,20 @@ const Follows = () => {
                 : 0
             )
             .map((user) => (
-              <li key={user.id} className="flex items-center p-1.5">
-                <Image
-                  className="rounded-full px-3"
-                  alt="user profile"
-                  src={user.profile_image_url}
-                  width={30}
-                  height={30}
-                />
+              <li key={user.id}>
+                <Link href={`/users/${user.id}`} passHref>
+                  <a className="flex items-center p-1.5">
+                    <Image
+                      className="rounded-full px-3"
+                      alt="user profile"
+                      src={user.profile_image_url}
+                      width={30}
+                      height={30}
+                    />
 
-                <p className="text-sm pl-2">{user.display_name}</p>
+                    <p className="text-sm pl-2">{user.display_name}</p>
+                  </a>
+                </Link>
               </li>
             ))}
       </ul>
