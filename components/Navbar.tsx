@@ -10,8 +10,8 @@ const Navbar = ({ path }: Props) => {
   const { data: session } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
-    <nav className="w-full h-10 flex justify-between items-center bg-violet-900">
-      <h1 className="px-3 font-bold text-slate-50">Twitcher</h1>
+    <nav className="relative w-full h-10 flex justify-between items-center bg-violet-700">
+      <h1 className="px-3 font-bold ">Twitcher</h1>
       <div className="flex items-center">
         {session?.user ? (
           <h2 className="text-slate-50">{session.user.name}</h2>
@@ -22,7 +22,7 @@ const Navbar = ({ path }: Props) => {
         )}
         {session?.user?.image && (
           <div
-            className="px-3 flex items-center"
+            className="px-3 flex items-center cursor-pointer"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <Image
@@ -35,7 +35,11 @@ const Navbar = ({ path }: Props) => {
           </div>
         )}
       </div>
-      {isMenuOpen && <div className="absolute"></div>}
+      {isMenuOpen && (
+        <div className="absolute top-full right-0 p-2 rounded-md bg-slate-700">
+          <button p-1>Logout</button>
+        </div>
+      )}
     </nav>
   );
 };

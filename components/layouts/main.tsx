@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Navbar } from '../components';
+import { Navbar } from '..';
 import { Router } from 'next/router';
 
 interface Props {
