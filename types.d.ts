@@ -6,6 +6,11 @@ export interface Token extends JWT {
   accessTokenExpires: string;
   user: User;
 }
+
+type Pagination = {
+  cursor: string;
+};
+
 export interface Follow {
   followed_at: string;
   from_id: string;
@@ -39,8 +44,31 @@ export interface TwitchUser {
 
 export interface FollowedUsers {
   followed_users: TwitchUser[];
-  pagination: {
-    cursor: string;
-  };
+  pagination: Pagination;
   total: number;
+}
+
+export interface TwitchVideo {
+  id: string;
+  stream_id: string;
+  user_id: string;
+  user_login: string;
+  user_name: string;
+  title: string;
+  description: string;
+  duration: string;
+  thumbnail_url: string;
+  view_count: number;
+  url: string;
+  language: string;
+  muted_segments: any;
+  type: string;
+  viewable: string;
+  created_at: string;
+  published_at: string;
+}
+
+export interface Videos {
+  data: TwitchVideo[];
+  pagination: Pagination;
 }
