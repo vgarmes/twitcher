@@ -27,7 +27,13 @@ const User = () => {
             .replace('%{width}', '440')
             .replace('%{height}', '248');
 
-          return <CardVideo key={video.id} urlThumbnail={thumbnail} />;
+          return (
+            <CardVideo
+              key={video.id}
+              urlThumbnail={thumbnail}
+              duration={video.duration}
+            />
+          );
         })}
       </div>
     </Layout>
