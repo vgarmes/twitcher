@@ -72,3 +72,9 @@ export interface Videos {
   data: TwitchVideo[];
   pagination: Pagination;
 }
+
+export interface IUser {
+  userId: string;
+  favorites: string[];
+  watchLater: string[];
+}
