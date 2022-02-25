@@ -1,6 +1,7 @@
 import formatTime from '../utils/formatTime';
 import { format } from 'timeago.js';
 interface Props {
+  url: string;
   urlThumbnail: string;
   title?: string;
   urlProfile?: string;
@@ -28,9 +29,15 @@ const beforeStyle = [
   'hover:before:scale-100',
 ].join(' ');
 
-const CardVideo = ({ urlThumbnail, title, duration, createdAt }: Props) => {
+const CardVideo = ({
+  url,
+  urlThumbnail,
+  title,
+  duration,
+  createdAt,
+}: Props) => {
   return (
-    <div className="flex-col justify-center w-full">
+    <a className="flex-col justify-center w-full cursor-pointer" href={url}>
       <div className=" bg-violet-700">
         <div className="relative">
           <img
@@ -45,7 +52,7 @@ const CardVideo = ({ urlThumbnail, title, duration, createdAt }: Props) => {
       </div>
       <h2 className="text-sm font-semibold pt-1">{title}</h2>
       <h3 className="text-xs text-right text-gray-300">{format(createdAt)}</h3>
-    </div>
+    </a>
   );
 };
 

@@ -27,25 +27,28 @@ const User = () => {
         {data.data?.length > 0 && data.data[0].user_name}
       </h1>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-8 mx-auto">
-        {data.data.map(({ id, title, duration, thumbnail_url, created_at }) => {
-          if (!thumbnail_url) {
-            // live video
-            return null;
-          }
-          const thumbnail = thumbnail_url
-            .replace('%{width}', '440')
-            .replace('%{height}', '248');
+        {data.data.map(
+          ({ id, title, duration, url, thumbnail_url, created_at }) => {
+            if (!thumbnail_url) {
+              // live video
+              return null;
+            }
+            const thumbnail = thumbnail_url
+              .replace('%{width}', '440')
+              .replace('%{height}', '248');
 
-          return (
-            <CardVideo
-              key={id}
-              title={title}
-              urlThumbnail={thumbnail}
-              duration={duration}
-              createdAt={created_at}
-            />
-          );
-        })}
+            return (
+              <CardVideo
+                key={id}
+                title={title}
+                url={url}
+                urlThumbnail={thumbnail}
+                duration={duration}
+                createdAt={created_at}
+              />
+            );
+          }
+        )}
       </div>
     </Layout>
   );
