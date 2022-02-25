@@ -2,6 +2,7 @@ import { User } from 'next-auth/core/types';
 import { Token } from '../../../types';
 import NextAuth from 'next-auth/next';
 import TwitchProvider from 'next-auth/providers/twitch';
+import registerNewUser from '../../../utils/registerNewUser';
 
 /**
  * Takes a token, and returns a new token with updated
@@ -60,6 +61,7 @@ export default NextAuth({
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
+        registerNewUser(user.id);
         return {
           accessToken: account.access_token,
           accessTokenExpires: account.expires_at,
