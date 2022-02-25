@@ -1,9 +1,6 @@
 import useSWR, { SWRResponse } from 'swr';
-import axios from 'axios';
 import { FollowedUsers, Videos } from '../types';
-
-const fetcher = (url: string, config: any) =>
-  axios.get(url, config).then((res) => res.data);
+import fetcher from '../utils/fetcher';
 
 export const useFollows: () => SWRResponse<FollowedUsers, any> = () => {
   return useSWR('/api/twitch/follows', fetcher);

@@ -1,11 +1,9 @@
-import useSWR from 'swr';
 import { useFollows } from '../hooks/twitch-api';
 import Image from 'next/image';
 import Link from 'next/link';
 
 const Follows = () => {
   const { data, error } = useFollows();
-  console.log(data);
   return (
     <div>
       <h1 className="uppercase font-bold text-sm p-1.5">Followed</h1>
