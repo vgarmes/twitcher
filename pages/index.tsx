@@ -4,11 +4,19 @@ import Layout from '../components/layouts/article';
 import Follows from '../components/Follows';
 import { useGetUser } from '../hooks/db-queries';
 import { useSession } from 'next-auth/react';
+import Loading from '../components/Loading';
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
-  const { data, error } = useGetUser((session?.user as User)?.id);
-  console.log(data);
+  const { user, isLoading, error } = useGetUser((session?.user as User)?.id);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <div>Something went wrong</div>;
+  }
+  console.log(user);
   return (
     <Layout>
       <main>

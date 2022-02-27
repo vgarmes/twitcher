@@ -1,9 +1,13 @@
 import { useFollows } from '../hooks/twitch-api';
 import Image from 'next/image';
 import Link from 'next/link';
+import Loading from './Loading';
 
 const Follows = () => {
   const { data, error } = useFollows();
+  if (!data && !error) {
+    return <Loading />;
+  }
   return (
     <div>
       <h1 className="uppercase font-bold text-sm p-1.5">Followed</h1>
