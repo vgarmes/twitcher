@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   if (error) {
     return <div>Something went wrong</div>;
   }
-  console.log(user);
+
   return (
     <Layout>
       <main>

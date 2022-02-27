@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface Props {
   path: string;
@@ -11,12 +12,14 @@ const Navbar = ({ path }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <nav className="relative w-full h-10 flex justify-between items-center bg-violet-700">
-      <h1 className="px-3 font-bold ">Twitcher</h1>
+      <Link href="/" passHref>
+        <a className="px-3 font-bold">Twitcher</a>
+      </Link>
       <div className="flex items-center">
         {session?.user ? (
           <h2 className="text-slate-50">{session.user.name}</h2>
         ) : (
-          <h2 className="text-slate-50" onClick={() => signIn()}>
+          <h2 className="text-slate-50 pr-3" onClick={() => signIn()}>
             Sign in
           </h2>
         )}
@@ -37,7 +40,9 @@ const Navbar = ({ path }: Props) => {
       </div>
       {isMenuOpen && (
         <div className="absolute top-full right-0 p-2 rounded-md bg-slate-700">
-          <button p-1>Logout</button>
+          <button className="p-1" onClick={() => signOut()}>
+            Logout
+          </button>
         </div>
       )}
     </nav>
