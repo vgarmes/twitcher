@@ -1,5 +1,6 @@
 import formatTime from '../utils/formatTime';
 import { format } from 'timeago.js';
+import { MdWatchLater } from 'react-icons/md';
 interface Props {
   url: string;
   urlThumbnail: string;
@@ -50,8 +51,17 @@ const CardVideo = ({
           </div>
         </div>
       </div>
-      <h2 className="text-sm font-semibold pt-1">{title}</h2>
-      <h3 className="text-xs text-right text-gray-300">{format(createdAt)}</h3>
+      <div className="p-1">
+        <h2 className="text-sm font-semibold">{title}</h2>
+        <div className="flex justify-between">
+          <h3 className="text-xs text-gray-300">{format(createdAt)}</h3>
+          <div className="flex justify-center items-center">
+            <button className="hover:scale-125 hover:text-white">
+              <MdWatchLater />
+            </button>
+          </div>
+        </div>
+      </div>
     </a>
   );
 };
