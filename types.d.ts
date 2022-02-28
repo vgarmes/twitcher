@@ -42,12 +42,6 @@ export interface TwitchUser {
   created_at: string;
 }
 
-export interface FollowedUsers {
-  followed_users: TwitchUser[];
-  pagination: Pagination;
-  total: number;
-}
-
 export interface TwitchVideo {
   id: string;
   stream_id: string;

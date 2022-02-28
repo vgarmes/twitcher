@@ -1,8 +1,6 @@
-import { Token } from '../types';
-
-export const getAuthHeaders = (token: Token) => {
+export const getAuthHeaders = (accessToken: string) => {
   return {
-    Authorization: `Bearer ${token.accessToken}`,
+    Authorization: `Bearer ${accessToken}`,
     'Client-Id': process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
   };
 };

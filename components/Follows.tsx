@@ -1,19 +1,20 @@
-import { useFollows } from '../hooks/twitch-api';
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from './Loading';
+import { useGetFollows } from '../lib/twitch-api';
 
 const Follows = () => {
-  const { data, error } = useFollows();
-  if (!data && !error) {
+  const { data, isLoading, error } = useGetFollows();
+  if (isLoading) {
     return <Loading />;
   }
+
   return (
     <div>
       <h1 className="uppercase font-bold text-sm p-1.5">Followed</h1>
       <ul>
         {data &&
-          data.followed_users
+          data.follows
             .sort((a, b) =>
               a.display_name < b.display_name
                 ? -1
