@@ -3,6 +3,7 @@ import Layout from '../../components/layouts/article';
 import CardVideo from '../../components/CardVideo';
 import Loading from '../../components/Loading';
 import { useGetVideos } from '../../lib/twitch-api';
+import axios from 'axios';
 
 const User = () => {
   const router = useRouter();
@@ -40,6 +41,7 @@ const User = () => {
             return (
               <CardVideo
                 key={id}
+                videoId={id}
                 title={title}
                 url={url}
                 urlThumbnail={thumbnail}
