@@ -2,7 +2,8 @@ import connectDB from '../../../db/connect';
 import User from '../../../models/User';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { StatusCodes } from 'http-status-codes';
-import { IUser } from '../../../types';
+import { IUser, Token } from '../../../types';
+import { getToken } from 'next-auth/jwt';
 
 type Data = {
   success: boolean;
@@ -15,13 +16,14 @@ export default async function handler(
 ) {
   const { method } = req;
   await connectDB(process.env.MONGO_URI!);
-  const { user_id } = req.query;
+  //const { user_id } = req.query;
+  const { user } = (await getToken({ req })) as Token;
 
   switch (method) {
     case 'GET':
       try {
-        const user = await User.findOne({ userId: user_id });
-        res.status(StatusCodes.OK).json({ success: true, data: user });
+        const me = await User.findOne({ userId: user?.id });
+        res.status(StatusCodes.OK).json({ success: true, data: me });
       } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false });
       }
