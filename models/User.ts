@@ -1,14 +1,23 @@
-import mongoose from 'mongoose';
+import { model, models, Schema, Model, Document } from 'mongoose';
 
-const UserSchema = new mongoose.Schema(
+export interface IUserSchema extends Document {
+  userId: string;
+  favorites?: string[];
+  watchLater?: Array<{ videoId: string }>;
+}
+
+const VideoSchema = new Schema({});
+
+const UserSchema = new Schema<IUserSchema>(
   {
-    userId: String,
+    userId: { type: String, required: true },
     favorites: [String],
-    watchLater: [String],
+    watchLater: [{ videoId: { type: String, required: true } }],
   },
   { timestamps: true }
 );
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+export default (models.User as Model<IUserSchema>) ||
+  model<IUserSchema>('User', UserSchema);
 // assign the model only if it’s not assigned already
 // to avoid error: Cannot overwrite `User` model once compiled
