@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-interface Props {}
+interface Props {
+  onClick?: () => void;
+}
 
-const ButtonBoop: React.FC<Props> = ({ children }) => {
+const ButtonBoop: React.FC<Props> = ({ children, onClick }) => {
   const [clicked, setClicked] = useState(false);
   useEffect(() => {
     if (!clicked) return;
@@ -19,7 +21,10 @@ const ButtonBoop: React.FC<Props> = ({ children }) => {
   return (
     <button
       className="hover:bg-gray-700 p-1.5 rounded"
-      onClick={() => setClicked(true)}
+      onClick={() => {
+        setClicked(true);
+        onClick && onClick();
+      }}
     >
       <motion.div animate={clicked ? { scale: 0.5 } : { scale: 1 }}>
         {children}

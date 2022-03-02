@@ -4,7 +4,9 @@ import { format } from 'timeago.js';
 import { MdWatchLater } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import ButtonBoop from './ButtonBoop';
+import axios from 'axios';
 interface Props {
+  videoId: string;
   url: string;
   urlThumbnail: string;
   title?: string;
@@ -34,12 +36,17 @@ const beforeStyle = [
 ].join(' ');
 
 const CardVideo = ({
+  videoId,
   url,
   urlThumbnail,
   title,
   duration,
   createdAt,
 }: Props) => {
+  const addWatchLater = async (videoId: string) => {
+    const response = await axios.post(`/api/watchlater/${videoId}`);
+    console.log(response);
+  };
   return (
     <div>
       <div className=" bg-violet-700">
@@ -61,7 +68,7 @@ const CardVideo = ({
         <div className="flex justify-between">
           <h3 className="text-xs text-gray-300">{format(createdAt)}</h3>
           <div className="flex justify-center items-center">
-            <ButtonBoop>
+            <ButtonBoop onClick={() => addWatchLater(videoId)}>
               <MdWatchLater />
             </ButtonBoop>
           </div>
