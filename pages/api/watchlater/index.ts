@@ -11,18 +11,17 @@ export default async function handler(
 ) {
   const { method } = req;
   await connectDB(process.env.MONGO_URI!);
-  const { videoId } = req.query;
+
   const { user } = (await getToken({ req })) as Token;
 
   switch (method) {
-    case 'POST':
+    case 'GET':
       try {
-        const watchLaterUpdate = await User.updateOne(
-          { userId: user?.id, 'watchLater.videoId': { $ne: videoId } },
-          { $push: { watchLater: { videoId: videoId } } }
-        );
+        const userData = await User.findOne({ userId: user?.id });
 
-        res.status(StatusCodes.OK).json({ success: true });
+        res
+          .status(StatusCodes.OK)
+          .json({ success: true, data: userData?.watchLater });
       } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ success: false, error });
       }

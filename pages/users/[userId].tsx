@@ -4,11 +4,18 @@ import CardVideo from '../../components/CardVideo';
 import Loading from '../../components/Loading';
 import { useGetVideos } from '../../lib/twitch-api';
 import axios from 'axios';
+import useSWR from 'swr';
+import fetcher from '../../utils/fetcher';
+import { IUser } from '../../types';
 
 const User = () => {
   const router = useRouter();
   const { userId } = router.query;
   const { data, isLoading, error } = useGetVideos(userId as string);
+  const { data: user, error: userError } = useSWR<{ data: IUser }>(
+    '/api/user/me',
+    fetcher
+  );
 
   if (isLoading) {
     return <Loading />;
@@ -47,6 +54,13 @@ const User = () => {
                 urlThumbnail={thumbnail}
                 duration={duration}
                 createdAt={created_at}
+                isWatchLater={
+                  user?.data?.watchLater
+                    ? user.data.watchLater.findIndex(
+                        (wl) => wl.videoId === id
+                      ) > -1
+                    : false
+                }
               />
             );
           }

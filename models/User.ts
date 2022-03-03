@@ -6,8 +6,6 @@ export interface IUserSchema extends Document {
   watchLater?: Array<{ videoId: string }>;
 }
 
-const VideoSchema = new Schema({});
-
 const UserSchema = new Schema<IUserSchema>(
   {
     userId: { type: String, required: true },

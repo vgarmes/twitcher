@@ -70,5 +70,5 @@ export interface Videos {
 export interface IUser {
   userId: string;
   favorites: string[];
-  watchLater: string[];
+  watchLater: Array<{ videoId: string }>;
 }

@@ -1,31 +1,27 @@
+import { StatusCodes } from 'http-status-codes';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getToken } from 'next-auth/jwt';
 import connectDB from '../../../db/connect';
 import User from '../../../models/User';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { StatusCodes } from 'http-status-codes';
 import { IUser, Token } from '../../../types';
-import { getToken } from 'next-auth/jwt';
-
-type Data = {
-  success: boolean;
-  data?: IUser;
-};
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse
 ) {
   const { method } = req;
   await connectDB(process.env.MONGO_URI!);
-  //const { user_id } = req.query;
+
   const { user } = (await getToken({ req })) as Token;
 
   switch (method) {
     case 'GET':
       try {
-        const me = await User.findOne({ userId: user?.id });
-        res.status(StatusCodes.OK).json({ success: true, data: me });
+        const userData = await User.findOne({ userId: user?.id });
+
+        res.status(StatusCodes.OK).json({ success: true, data: userData });
       } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ success: false });
+        res.status(StatusCodes.BAD_REQUEST).json({ success: false, error });
       }
       break;
     default:

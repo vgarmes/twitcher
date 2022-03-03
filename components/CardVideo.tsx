@@ -13,6 +13,7 @@ interface Props {
   urlProfile?: string;
   duration: string;
   createdAt: string;
+  isWatchLater?: boolean;
 }
 
 const beforeAfterStyle = [
@@ -42,6 +43,7 @@ const CardVideo = ({
   title,
   duration,
   createdAt,
+  isWatchLater,
 }: Props) => {
   const addWatchLater = async (videoId: string) => {
     const response = await axios.post(`/api/watchlater/${videoId}`);
@@ -69,7 +71,7 @@ const CardVideo = ({
           <h3 className="text-xs text-gray-300">{format(createdAt)}</h3>
           <div className="flex justify-center items-center">
             <ButtonBoop onClick={() => addWatchLater(videoId)}>
-              <MdWatchLater />
+              <MdWatchLater color={isWatchLater ? 'yellow' : 'white'} />
             </ButtonBoop>
           </div>
         </div>
