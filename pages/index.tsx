@@ -4,8 +4,14 @@ import Layout from '../components/layouts/article';
 import Follows from '../components/Follows';
 import { useSession } from 'next-auth/react';
 import Loading from '../components/Loading';
+import getAppToken from '../utils/getAppToken';
+import { AppAccessToken } from '../types';
+import { getTopGames } from '../lib/twitch-api';
 
-const Home: NextPage = () => {
+interface Props {
+  topGames: any;
+}
+const Home: NextPage<Props> = ({ topGames }) => {
   /* if (isLoading) {
     return <Loading />;
   }
@@ -13,15 +19,25 @@ const Home: NextPage = () => {
     return <div>Something went wrong</div>;
   } */
 
-  return (
-    <Layout>
+  /* <Layout>
       <main>
         <Follows />
       </main>
 
       <footer></footer>
-    </Layout>
-  );
+    </Layout> */
+  console.log(topGames);
+  return <></>;
 };
+
+export async function getStaticProps() {
+  const topGames = await getTopGames();
+  return {
+    props: {
+      topGames,
+    },
+    revalidate: 3600,
+  };
+}
 
 export default Home;

@@ -72,3 +72,15 @@ export interface IUser {
   favorites: string[];
   watchLater: Array<{ videoId: string }>;
 }
+
+export interface AppToken {
+  access_token: string;
+  expires_in: number;
+  token_type: string;
+}
+
+export interface AppAccessToken {
+  accessToken: string;
+  expires: number;
+  tokenType: string;
+}

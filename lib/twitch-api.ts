@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import useSWR from 'swr';
 import { Follows, TwitchUser, Videos } from '../types';
 import fetcher from '../utils/fetcher';
+import getAppToken from '../utils/getAppToken';
 import { getAuthHeaders } from '../utils/getAuthHeaders';
 
 export const useGetFollows = () => {
@@ -62,4 +63,14 @@ export const useGetVideos = (userId: string) => {
     isLoading: !data && !error,
     error,
   };
+};
+
+export const getTopGames = async () => {
+  const appToken = await getAppToken();
+  const headers = getAuthHeaders(appToken?.accessToken as string);
+  const resp = await fetcher('https://api.twitch.tv/helix/games/top', {
+    headers,
+  });
+  console.log(resp);
+  return resp;
 };
