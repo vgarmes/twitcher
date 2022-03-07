@@ -27,7 +27,15 @@ const Home: NextPage<Props> = ({ topGames }) => {
       <footer></footer>
     </Layout> */
   console.log(topGames);
-  return <></>;
+  return (
+    <Layout>
+      <main>
+        <Follows />
+      </main>
+
+      <footer></footer>
+    </Layout>
+  );
 };
 
 export async function getStaticProps() {

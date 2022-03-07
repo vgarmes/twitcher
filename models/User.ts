@@ -15,7 +15,7 @@ const UserSchema = new Schema<IUserSchema>(
   { timestamps: true }
 );
 
-export default (models.User as Model<IUserSchema>) ||
+export default (models?.User as Model<IUserSchema>) ||
   model<IUserSchema>('User', UserSchema);
 // assign the model only if it’s not assigned already
 // to avoid error: Cannot overwrite `User` model once compiled

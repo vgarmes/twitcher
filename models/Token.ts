@@ -15,5 +15,5 @@ const TokenSchema = new Schema<ITokenSchema>(
   { timestamps: true }
 );
 
-export default (models.Token as Model<ITokenSchema>) ||
+export default (models?.Token as Model<ITokenSchema>) ||
   model<ITokenSchema>('Token', TokenSchema);
