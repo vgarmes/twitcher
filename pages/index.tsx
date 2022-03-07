@@ -7,6 +7,7 @@ import Loading from '../components/Loading';
 import getAppToken from '../utils/getAppToken';
 import { AppAccessToken } from '../types';
 import { getTopGames } from '../lib/twitch-api';
+import GameGrid from '../components/GameGrid';
 
 interface Props {
   topGames: any;
@@ -26,10 +27,11 @@ const Home: NextPage<Props> = ({ topGames }) => {
 
       <footer></footer>
     </Layout> */
-  console.log(topGames);
+
   return (
     <Layout>
       <main>
+        <GameGrid games={topGames} />
         <Follows />
       </main>
 

@@ -72,5 +72,5 @@ export const getTopGames = async () => {
     headers,
   });
   console.log(resp);
-  return resp;
+  return resp.data;
 };
