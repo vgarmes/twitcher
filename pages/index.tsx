@@ -31,8 +31,8 @@ const Home: NextPage<Props> = ({ topGames }) => {
   return (
     <Layout>
       <main>
-        <GameGrid games={topGames} />
         <Follows />
+        <GameGrid games={topGames} />
       </main>
 
       <footer></footer>
