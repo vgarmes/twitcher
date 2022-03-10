@@ -71,6 +71,6 @@ export const getTopGames = async () => {
   const resp = await fetcher('https://api.twitch.tv/helix/games/top', {
     headers,
   });
-  console.log(resp);
+
   return resp.data;
 };
