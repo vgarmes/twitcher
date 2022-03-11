@@ -4,7 +4,7 @@ import CardVideo from '../../components/CardVideo';
 import Loading from '../../components/Loading';
 import { useGetVideos } from '../../lib/twitch-api';
 import axios from 'axios';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import fetcher from '../../utils/fetcher';
 import { IUser } from '../../types';
 
@@ -12,10 +12,29 @@ const User = () => {
   const router = useRouter();
   const { userId } = router.query;
   const { data, isLoading, error } = useGetVideos(userId as string);
+  const { mutate } = useSWRConfig();
   const { data: user, error: userError } = useSWR<{ data: IUser }>(
     '/api/user/me',
     fetcher
   );
+  const mutateWatchLater = async (id: string) => {
+    if (!user?.data) {
+      return;
+    }
+    // update local data
+    mutate(
+      '/api/user/me',
+      {
+        ...user.data,
+        watchLater: [...user.data.watchLater, { videoId: id }],
+      },
+      false
+    );
+
+    await axios.post(`/api/watchlater/${id}`);
+    // trigger a revalidation (refetch)
+    mutate('/api/user/me');
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -61,6 +80,7 @@ const User = () => {
                       ) > -1
                     : false
                 }
+                onAddWatchLater={(id) => mutateWatchLater(id)}
               />
             );
           }

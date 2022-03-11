@@ -17,10 +17,24 @@ export default async function handler(
   switch (method) {
     case 'POST':
       try {
-        const watchLaterUpdate = await User.updateOne(
+        // add video to watch later if it's not already there
+        const updatedUser = await User.updateOne(
           { userId: user?.id, 'watchLater.videoId': { $ne: videoId } },
           { $push: { watchLater: { videoId: videoId } } }
         );
+
+        if (!updatedUser.modifiedCount) {
+          if (!updatedUser.acknowledged) {
+            res
+              .status(StatusCodes.INTERNAL_SERVER_ERROR)
+              .json({ success: false, error: 'Could not add video' });
+          }
+          // remove video
+          await User.updateOne(
+            { userId: user?.id },
+            { $pull: { watchLater: { videoId: videoId } } }
+          );
+        }
 
         res.status(StatusCodes.OK).json({ success: true });
       } catch (error) {
