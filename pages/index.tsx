@@ -1,11 +1,6 @@
 import type { NextPage } from 'next';
-import { User } from 'next-auth/core/types';
 import Layout from '../components/layouts/article';
 import Follows from '../components/Follows';
-import { useSession } from 'next-auth/react';
-import Loading from '../components/Loading';
-import getAppToken from '../utils/getAppToken';
-import { AppAccessToken } from '../types';
 import { getTopGames } from '../lib/twitch-api';
 import GameGrid from '../components/GameGrid';
 
@@ -27,7 +22,6 @@ const Home: NextPage<Props> = ({ topGames }) => {
 
       <footer></footer>
     </Layout> */
-
   return (
     <Layout>
       <main>

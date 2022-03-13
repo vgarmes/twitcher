@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from './Loading';
-import { useGetFollows } from '../lib/twitch-api';
+import useSWR from 'swr';
+import { TwitchUser, FollowsApi } from '../types';
+import fetcher from '../utils/fetcher';
 
 const Follows = () => {
-  const { data, isLoading, error } = useGetFollows();
-  if (isLoading) {
+  const { data, error } = useSWR<FollowsApi>('/api/twitch/follows', fetcher);
+  if (!data && !error) {
     return <Loading />;
   }
 

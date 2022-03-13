@@ -84,3 +84,9 @@ export interface AppAccessToken {
   expires: number;
   tokenType: string;
 }
+
+export interface FollowsApi {
+  follows: TwitchUser[];
+  total: number;
+  pagination: Pagination;
+}
