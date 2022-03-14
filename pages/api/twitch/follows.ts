@@ -4,7 +4,6 @@ import { User } from 'next-auth/core/types';
 import { getSession } from 'next-auth/react';
 import { Follows, TwitchUser } from '../../../types';
 import { getAuthHeaders } from '../../../utils/getAuthHeaders';
-import { setAuthHeaders } from '../../../utils/setAuthHeaders';
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,13 +31,11 @@ export default async function handler(
     const users = await axios.get<{ data: TwitchUser[] }>(usersUrl, {
       headers,
     });
-    res
-      .status(200)
-      .json({
-        follows: users.data.data,
-        total: follows.data.total,
-        pagination: follows.data.pagination,
-      });
+    res.status(200).json({
+      follows: users.data.data,
+      total: follows.data.total,
+      pagination: follows.data.pagination,
+    });
   } catch (error) {
     console.log(error);
   }

@@ -2,16 +2,19 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/layouts/article';
 import CardVideo from '../../components/CardVideo';
 import Loading from '../../components/Loading';
-import { useGetVideos } from '../../lib/twitch-api';
 import axios from 'axios';
 import useSWR, { useSWRConfig } from 'swr';
 import fetcher from '../../utils/fetcher';
-import { IUser } from '../../types';
+import { IUser, Videos } from '../../types';
 
 const User = () => {
   const router = useRouter();
   const { userId } = router.query;
-  const { data, isLoading, error } = useGetVideos(userId as string);
+  const url =
+    typeof userId === 'string'
+      ? '/api/videos' + new URLSearchParams({ user_id: userId })
+      : null;
+  const { data, error } = useSWR<Videos>(url, fetcher);
   const { mutate } = useSWRConfig();
   const { data: user, error: userError } = useSWR<{ data: IUser }>(
     '/api/user/me',
@@ -36,7 +39,7 @@ const User = () => {
     mutate('/api/user/me');
   };
 
-  if (isLoading) {
+  if (!data && !error) {
     return <Loading />;
   }
 
