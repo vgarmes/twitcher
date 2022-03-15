@@ -12,7 +12,7 @@ const User = () => {
   const { userId } = router.query;
   const url =
     typeof userId === 'string'
-      ? '/api/videos' + new URLSearchParams({ user_id: userId })
+      ? '/api/twitch/videos?' + new URLSearchParams({ user_id: userId })
       : null;
   const { data, error } = useSWR<Videos>(url, fetcher);
   const { mutate } = useSWRConfig();
