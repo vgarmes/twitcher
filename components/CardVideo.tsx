@@ -5,6 +5,7 @@ import { MdWatchLater } from 'react-icons/md';
 import { motion } from 'framer-motion';
 import ButtonBoop from './ButtonBoop';
 import axios from 'axios';
+import Skeleton from './skeleton/Skeleton';
 
 interface Props {
   videoId: string;
@@ -37,6 +38,19 @@ const beforeStyle = [
   'hover:before:-rotate-45',
   'hover:before:scale-100',
 ].join(' ');
+
+export const SkeletonCardVideo = () => {
+  return (
+    <div>
+      <Skeleton>
+        <div className="w-full after:content-[''] after:block after:pb-[56%]"></div>
+      </Skeleton>
+      <div className="py-3">
+        <Skeleton width={'100%'} height={24} boxHeight={48} />
+      </div>
+    </div>
+  );
+};
 
 const CardVideo = ({
   videoId,
