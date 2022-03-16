@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getToken } from 'next-auth/jwt';
+import { getSession } from 'next-auth/react';
 import connectDB from '../../../db/connect';
 import User from '../../../models/User';
-import { IUser, Token } from '../../../types';
+import { User as UserAuth } from 'next-auth/core/types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,12 +12,18 @@ export default async function handler(
   const { method } = req;
   await connectDB(process.env.MONGO_URI!);
 
-  const { user } = (await getToken({ req })) as Token;
+  const session = await getSession({ req });
+
+  if (!session || session.error) {
+    return res.status(401).json({ success: false, error: 'Not authorized' });
+  }
 
   switch (method) {
     case 'GET':
       try {
-        const userData = await User.findOne({ userId: user?.id });
+        const userData = await User.findOne({
+          userId: (session.user as UserAuth)?.id,
+        });
 
         res.status(StatusCodes.OK).json({ success: true, data: userData });
       } catch (error) {
