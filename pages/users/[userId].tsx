@@ -54,7 +54,7 @@ const User = () => {
       </h1>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-8 mx-auto">
         {!data && !error
-          ? Array(10).fill(<SkeletonCardVideo />)
+          ? [...Array(10)].map((_, i) => <SkeletonCardVideo key={i} />)
           : data?.data.map(
               ({ id, title, duration, url, thumbnail_url, created_at }) => {
                 if (!thumbnail_url) {
