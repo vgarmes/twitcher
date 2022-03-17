@@ -90,3 +90,9 @@ export interface FollowsApi {
   total: number;
   pagination: Pagination;
 }
+
+export interface ApiResponse<T> {
+  success: boolean;
+  error?: string;
+  data: T;
+}

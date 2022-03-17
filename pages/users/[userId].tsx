@@ -17,7 +17,7 @@ const User = () => {
   const { data, error } = useSWR<Videos>(url, fetcher);
   const { mutate } = useSWRConfig();
   const { data: user, error: userError } = useSWR<{ data: IUser }>(
-    '/api/user/me',
+    '/api/me',
     fetcher
   );
   const mutateWatchLater = async (id: string) => {
@@ -26,7 +26,7 @@ const User = () => {
     }
     // update local data
     mutate(
-      '/api/user/me',
+      '/api/me',
       {
         ...user.data,
         watchLater: [...user.data.watchLater, { videoId: id }],
@@ -36,7 +36,7 @@ const User = () => {
 
     await axios.post(`/api/watchlater/${id}`);
     // trigger a revalidation (refetch)
-    mutate('/api/user/me');
+    mutate('/api/me');
   };
 
   if (error) {
