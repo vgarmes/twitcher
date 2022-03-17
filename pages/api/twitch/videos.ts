@@ -10,10 +10,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const {
-    query: { user_id },
+    query: { id, user_id },
   } = req;
 
-  if (!user_id || typeof user_id !== 'string') {
+  if ((!user_id && !id) || (user_id && typeof user_id !== 'string')) {
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ error: 'invalid query parameters' });
@@ -27,13 +27,25 @@ export default async function handler(
 
   const headers = getAuthHeaders(session.accessToken as string);
 
-  const url =
-    'https://api.twitch.tv/helix/videos?' + new URLSearchParams({ user_id });
+  let queryParams = {};
+
+  if (user_id) {
+    queryParams = new URLSearchParams({ user_id });
+  } else {
+    queryParams =
+      typeof id === 'string'
+        ? new URLSearchParams({ id })
+        : id
+            .reduce((accum, singleId) => accum + `id=${singleId}&`, '')
+            .slice(0, -1);
+  }
+
+  const url = 'https://api.twitch.tv/helix/videos?' + queryParams;
 
   try {
     const videos = await axios.get<Videos>(url, { headers });
-    res.status(200).json(videos.data);
+    res.status(200).json({ success: true, ...videos.data });
   } catch (error) {
-    console.log(error);
+    res.status(500).json({ success: false });
   }
 }
