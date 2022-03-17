@@ -23,10 +23,9 @@ export default async function handler(
 
   try {
     const follows = await axios.get<Follows>(followsUrl, { headers });
-    const queryParams = follows.data?.data.reduce(
-      (accum, follow) => accum + `id=${follow.to_id}&`,
-      ''
-    );
+    const queryParams = follows.data?.data
+      .reduce((accum, follow) => accum + `id=${follow.to_id}&`, '')
+      .slice(0, -1);
     const usersUrl = 'https://api.twitch.tv/helix/users?' + queryParams;
     const users = await axios.get<{ data: TwitchUser[] }>(usersUrl, {
       headers,
