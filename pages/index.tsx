@@ -3,28 +3,18 @@ import Layout from '../components/layouts/article';
 import Follows from '../components/Follows';
 import { getTopGames } from '../lib/twitch-api';
 import GameGrid from '../components/GameGrid';
+import ButtonLink from '../components/ButtonLink';
 
 interface Props {
   topGames: any;
 }
 const Home: NextPage<Props> = ({ topGames }) => {
-  /* if (isLoading) {
-    return <Loading />;
-  }
-  if (error) {
-    return <div>Something went wrong</div>;
-  } */
-
-  /* <Layout>
-      <main>
-        <Follows />
-      </main>
-
-      <footer></footer>
-    </Layout> */
   return (
     <Layout>
       <main>
+        <div className="flex justify-center my-20">
+          <ButtonLink href="/watch-later">watch later playlist</ButtonLink>
+        </div>
         <Follows />
         <GameGrid games={topGames} />
       </main>
