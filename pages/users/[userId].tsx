@@ -34,7 +34,7 @@ const User = () => {
       false
     );
 
-    await axios.post(`/api/watchlater/${id}`);
+    await axios.post(`/api/me/watchlater/${id}`);
     // trigger a revalidation (refetch)
     mutate('/api/me');
   };
@@ -53,9 +53,8 @@ const User = () => {
         {data && data.data[0].user_name}
       </h1>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-8 mx-auto">
-        {!data && !error
-          ? [...Array(10)].map((_, i) => <SkeletonCardVideo key={i} />)
-          : data?.data.map(
+        {data
+          ? data.data.map(
               ({ id, title, duration, url, thumbnail_url, created_at }) => {
                 if (!thumbnail_url) {
                   // live video
@@ -85,7 +84,8 @@ const User = () => {
                   />
                 );
               }
-            )}
+            )
+          : [...Array(10)].map((_, i) => <SkeletonCardVideo key={i} />)}
       </div>
     </Layout>
   );

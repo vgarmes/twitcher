@@ -1,17 +1,83 @@
 import { NextPage } from 'next';
 import fetcher from '../../utils/fetcher';
 import useSWR, { useSWRConfig } from 'swr';
-import { IUser } from '../../types';
+import { ApiResponse, Videos } from '../../types';
 import Layout from '../../components/layouts/article';
-import { useEffect } from 'react';
 import axios from 'axios';
+import CardVideo, { SkeletonCardVideo } from '../../components/CardVideo';
 
 const WatchLater: NextPage<{}> = () => {
-  const { data, error } = useSWR('/api/me/watchlater', fetcher);
-  console.log(data);
+  const { data, error } = useSWR<ApiResponse<Videos>>(
+    '/api/me/watchlater',
+    fetcher
+  );
+  const { mutate } = useSWRConfig();
+
+  const mutateWatchLater = async (id: string) => {
+    if (!data?.data) {
+      return;
+    }
+    // update local data
+    /* const newVideos =
+      data.data.data.findIndex((video) => video.id === id) < 0
+        ? [...data.data.data, { videoId: id }]
+        : user.data.watchLater.filter((video) => video.videoId === id); */
+
+    const newData = {
+      ...data,
+      data: {
+        data: data.data.data.filter((video) => video.id === id),
+        pagination: data.data.pagination,
+      },
+    };
+
+    mutate('/api/me/watchlater', newData, false);
+
+    await axios.post(`/api/me/watchlater/${id}`);
+    // trigger a revalidation (refetch)
+    mutate('/api/me/watchlater');
+  };
+
+  if (error) {
+    return (
+      <div className="h-screen w-screen flex justify-center">
+        <p className="text-lg">Ooops! Something went wrong...</p>
+      </div>
+    );
+  }
+
   return (
     <Layout>
       <h1 className="text-3xl font-bold pb-5">Watch later</h1>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(250px,_1fr))] gap-8 mx-auto">
+        {data
+          ? data.data.data.map(
+              ({ id, title, duration, url, thumbnail_url, created_at }) => {
+                if (!thumbnail_url) {
+                  // live video
+                  return null;
+                }
+                const thumbnail = thumbnail_url
+                  .replace('%{width}', '440')
+                  .replace('%{height}', '248');
+
+                return (
+                  <CardVideo
+                    key={id}
+                    videoId={id}
+                    title={title}
+                    url={url}
+                    urlThumbnail={thumbnail}
+                    duration={duration}
+                    createdAt={created_at}
+                    isWatchLater={true}
+                    onAddWatchLater={(id) => mutateWatchLater(id)}
+                  />
+                );
+              }
+            )
+          : [...Array(10)].map((_, i) => <SkeletonCardVideo key={i} />)}
+      </div>
     </Layout>
   );
 };

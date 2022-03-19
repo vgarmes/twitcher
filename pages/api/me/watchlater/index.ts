@@ -1,12 +1,12 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import connectDB from '../../../db/connect';
-import User from '../../../models/User';
+import connectDB from '../../../../db/connect';
+import User from '../../../../models/User';
 import { User as UserAuth } from 'next-auth/core/types';
-import { getAuthHeaders } from '../../../utils/getAuthHeaders';
+import { getAuthHeaders } from '../../../../utils/getAuthHeaders';
 import axios from 'axios';
-import { ApiResponse, Videos } from '../../../types';
+import { ApiResponse, Videos } from '../../../../types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,12 +37,10 @@ export default async function handler(
     });
 
     if (!user?.watchLater || user.watchLater.length === 0) {
-      return res
-        .status(StatusCodes.OK)
-        .json({
-          success: true,
-          data: { data: [], pagination: { cursor: '' } },
-        });
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        data: { data: [], pagination: { cursor: '' } },
+      });
     }
 
     const queryParams = user.watchLater

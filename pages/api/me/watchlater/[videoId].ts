@@ -1,9 +1,9 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
-import connectDB from '../../../db/connect';
-import User from '../../../models/User';
-import { IUser, Token } from '../../../types';
+import connectDB from '../../../../db/connect';
+import User from '../../../../models/User';
+import { IUser, Token } from '../../../../types';
 
 export default async function handler(
   req: NextApiRequest,
