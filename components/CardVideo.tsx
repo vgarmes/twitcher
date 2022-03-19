@@ -84,7 +84,9 @@ const CardVideo = ({
           <h3 className="text-xs text-gray-300">{format(createdAt)}</h3>
           <div className="flex justify-center items-center">
             <ButtonBoop onClick={() => onAddWatchLater(videoId)}>
-              <MdWatchLater color={isWatchLater ? 'yellow' : 'white'} />
+              <MdWatchLater
+                className={isWatchLater ? 'text-slate-50' : 'text-slate-500'}
+              />
             </ButtonBoop>
           </div>
         </div>

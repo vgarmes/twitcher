@@ -12,7 +12,7 @@ const ButtonBoop: React.FC<Props> = ({ children, onClick }) => {
 
     const timeout = window.setTimeout(() => {
       setClicked(false);
-    }, 200);
+    }, 1000);
 
     return () => {
       window.clearTimeout(timeout);
@@ -25,8 +25,12 @@ const ButtonBoop: React.FC<Props> = ({ children, onClick }) => {
         setClicked(true);
         onClick && onClick();
       }}
+      disabled={clicked}
     >
-      <motion.div animate={clicked ? { scale: 0.5 } : { scale: 1 }}>
+      <motion.div
+        animate={clicked ? { scale: [0.7, 1.1, 1] } : { scale: 1 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
         {children}
       </motion.div>
     </button>
