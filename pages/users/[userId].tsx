@@ -24,15 +24,6 @@ const User = () => {
     if (!user?.data) {
       return;
     }
-    // update local data
-    mutate(
-      '/api/me',
-      {
-        ...user.data,
-        watchLater: [...user.data.watchLater, { videoId: id }],
-      },
-      false
-    );
 
     await axios.post(`/api/me/watchlater/${id}`);
     // trigger a revalidation (refetch)

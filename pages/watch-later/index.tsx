@@ -17,21 +17,6 @@ const WatchLater: NextPage<{}> = () => {
     if (!data?.data) {
       return;
     }
-    // update local data
-    /* const newVideos =
-      data.data.data.findIndex((video) => video.id === id) < 0
-        ? [...data.data.data, { videoId: id }]
-        : user.data.watchLater.filter((video) => video.videoId === id); */
-
-    const newData = {
-      ...data,
-      data: {
-        data: data.data.data.filter((video) => video.id === id),
-        pagination: data.data.pagination,
-      },
-    };
-
-    mutate('/api/me/watchlater', newData, false);
 
     await axios.post(`/api/me/watchlater/${id}`);
     // trigger a revalidation (refetch)
