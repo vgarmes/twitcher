@@ -10,5 +10,8 @@ datasource db {
 model User {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   twitchId   String   @unique
+  name       String
+  email      String
+  image      String
   watchLater String[]
 }
