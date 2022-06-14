@@ -1,5 +1,4 @@
-import { User } from 'next-auth/core/types';
-import { Token } from '../../../types';
+import { JWT } from 'next-auth/jwt/types';
 import NextAuth from 'next-auth/next';
 import TwitchProvider from 'next-auth/providers/twitch';
 import upsertUser from '../../../utils/upsertUser';
@@ -10,8 +9,12 @@ import upsertUser from '../../../utils/upsertUser';
  * returns the old token and an error property
  */
 
-async function refreshAccessToken(token: Token) {
+async function refreshAccessToken(token: JWT) {
   try {
+    if (!token.refreshToken) {
+      throw 'Missing refresh token';
+    }
+
     const url =
       'https://id.twitch.tv/oauth2/token?' +
       new URLSearchParams({
@@ -43,10 +46,7 @@ async function refreshAccessToken(token: Token) {
   } catch (error) {
     console.log(error);
 
-    return {
-      ...token,
-      error: 'RefreshAccessTokenError',
-    };
+    return token;
   }
 }
 
@@ -60,9 +60,15 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user, account }) {
       // Initial sign in
+      console.log('jwt callback');
       if (account && user) {
+        console.log('initial signin');
+        console.log('account', account);
+        console.log('token', token);
         upsertUser(user);
+
         return {
+          ...token,
           accessToken: account.access_token,
           accessTokenExpires: account.expires_at,
           refreshToken: account.refresh_token,
@@ -71,16 +77,16 @@ export default NextAuth({
       }
 
       // Return previous token if the access token has not expired yet
-      if (Date.now() < (token.accessTokenExpires as number)) {
+      if (!token.accessTokenExpires || Date.now() < token.accessTokenExpires) {
         return token;
       }
 
       // Access token has expired, try to update it
-      return refreshAccessToken(token as Token);
+      return refreshAccessToken(token);
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken;
-      session.user = token.user as User;
+      session.user = token.user;
       return session;
     },
   },

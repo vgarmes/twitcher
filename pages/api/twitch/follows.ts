@@ -1,6 +1,7 @@
 import axios from 'axios';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { User } from 'next-auth/core/types';
+import { getToken } from 'next-auth/jwt';
 import { getSession } from 'next-auth/react';
 import { Follows, TwitchUser } from '../../../types';
 import { getAuthHeaders } from '../../../utils/getAuthHeaders';

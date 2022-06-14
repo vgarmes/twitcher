@@ -8,10 +8,10 @@ export function createRouter() {
 
 export function createProtectedRouter() {
   return trpc.router<Context>().middleware(async ({ ctx, next }) => {
-    if (!ctx.session) {
+    if (!ctx.token) {
       throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
     // infers that `session` is non-nullable to downstream procedures
-    return next({ ctx: { ...ctx, session: ctx.session } });
+    return next({ ctx: { ...ctx, token: ctx.token } });
   });
 }
