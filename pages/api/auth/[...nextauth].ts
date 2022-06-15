@@ -60,13 +60,8 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, user, account }) {
       // Initial sign in
-      console.log('jwt callback');
       if (account && user) {
-        console.log('initial signin');
-        console.log('account', account);
-        console.log('token', token);
         upsertUser(user);
-
         return {
           ...token,
           accessToken: account.access_token,
