@@ -4,7 +4,6 @@ import Follows from '../components/Follows';
 import { getTopGames } from '../lib/twitch-api';
 import GameGrid from '../components/GameGrid';
 import ButtonLink from '../components/ButtonLink';
-import { trpc } from '../utils/trpc';
 
 interface Props {
   topGames: any;

@@ -1,8 +1,5 @@
-import { prisma } from '../prisma';
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-import { createProtectedRouter, createRouter } from '../createRouter';
-import { getToken } from 'next-auth/jwt';
+import { prisma } from '../../prisma';
+import { createProtectedRouter } from '../../createRouter';
 
 export const userRouter = createProtectedRouter()
   .query('me', {

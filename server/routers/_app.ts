@@ -1,5 +1,5 @@
 import { createRouter } from '../createRouter';
-import { userRouter } from './user';
+import { userRouter } from './user/user';
 import superjson from 'superjson';
 
 export const appRouter = createRouter()

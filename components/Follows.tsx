@@ -1,14 +1,18 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Loading from './Loading';
-import useSWR from 'swr';
-import { TwitchUser, FollowsApi } from '../types';
-import fetcher from '../utils/fetcher';
+import useFollows from '../hooks/twitch/useFollows';
 
 const Follows = () => {
-  const { data, error } = useSWR<FollowsApi>('/api/twitch/follows', fetcher);
+  const { data, error } = useFollows();
+
   if (!data && !error) {
     return <Loading />;
+  }
+
+  if (error) {
+    console.log(error);
+    return <div>something went wrong</div>;
   }
 
   return (
@@ -16,8 +20,8 @@ const Follows = () => {
       <h2 className="font-bold mb-3 text-3xl">Followed users</h2>
       <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,_1fr))] gap-5 mx-auto mt-6">
         {data &&
-          data.follows
-            .sort((a, b) =>
+          [...data.follows]
+            ?.sort((a, b) =>
               a.display_name.toLowerCase() < b.display_name.toLowerCase()
                 ? -1
                 : a.display_name.toLowerCase() > b.display_name.toLowerCase()
