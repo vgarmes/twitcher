@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
+import { getSession } from 'next-auth/react';
 import connectDB from '../../../../db/connect';
 import User from '../../../../models/User';
 import { IUser, Token } from '../../../../types';
@@ -12,8 +13,14 @@ export default async function handler(
   const { method } = req;
   await connectDB(process.env.MONGO_URI!);
   const { videoId } = req.query;
-  const { user } = (await getToken({ req })) as Token;
+  const session = await getSession({ req });
+  if (!session) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ success: false, error: 'Unauthenticated' });
+  }
 
+  const { user } = session;
   switch (method) {
     case 'POST':
       try {
