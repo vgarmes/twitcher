@@ -6,15 +6,14 @@ import axios from 'axios';
 import useSWR, { useSWRConfig } from 'swr';
 import fetcher from '../../utils/fetcher';
 import { IUser, Videos } from '../../types';
+import useUserVideos from '../../hooks/twitch/useVideos';
 
 const User = () => {
   const router = useRouter();
   const { userId } = router.query;
-  const url =
-    typeof userId === 'string'
-      ? '/api/twitch/videos?' + new URLSearchParams({ user_id: userId })
-      : null;
-  const { data, error } = useSWR<Videos>(url, fetcher);
+
+  const { data, error } = useUserVideos(userId);
+
   const { mutate } = useSWRConfig();
   const { data: user, error: userError } = useSWR<{ data: IUser }>(
     '/api/me',
