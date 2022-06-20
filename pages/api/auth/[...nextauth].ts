@@ -1,3 +1,4 @@
+import { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt/types';
 import NextAuth from 'next-auth/next';
 import TwitchProvider from 'next-auth/providers/twitch';
@@ -50,7 +51,7 @@ async function refreshAccessToken(token: JWT) {
   }
 }
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     TwitchProvider({
       clientId: process.env.NEXT_PUBLIC_TWITCH_CLIENT_ID!,
@@ -85,4 +86,6 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);
