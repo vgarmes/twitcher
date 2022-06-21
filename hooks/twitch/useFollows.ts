@@ -54,8 +54,7 @@ const getFollows = async (session: Session | null) => {
   );
 };
 
-export default function useFollows() {
-  const { data: session } = useSession();
+export default function useFollows(session: Session | null) {
   return useQuery(['follows', session], () => getFollows(session), {
     enabled: !!session,
     keepPreviousData: true,

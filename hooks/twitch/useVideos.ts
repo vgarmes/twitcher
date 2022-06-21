@@ -6,7 +6,13 @@ import { twitchEndpoints } from '../../constants/twitchEndpoints';
 import { Videos } from '../../types';
 import { getAuthHeaders } from '../../utils/getAuthHeaders';
 
-const getVideosById = async (id?: string | string[]) => {
+const getVideosById = async (
+  session: Session | null,
+  id?: string | string[]
+) => {
+  if (!session) {
+    throw new Error('Unauthenticated');
+  }
   if (!id) {
     throw new Error('Missing video id');
   }
@@ -16,6 +22,10 @@ const getVideosById = async (id?: string | string[]) => {
       : id
           .reduce((accum, singleId) => accum + `id=${singleId}&`, '')
           .slice(0, -1);
+  const headers = getAuthHeaders(session?.accessToken);
+  const url = `${twitchEndpoints.videos}?${params}`;
+  const { data } = await axios.get<Videos>(url, { headers });
+  return data;
 };
 
 const getVideosByUserId = async (
@@ -35,14 +45,23 @@ const getVideosByUserId = async (
   return data;
 };
 
-export default function useUserVideos(userId?: string | string[]) {
-  const { data: session } = useSession();
+export function useUserVideos(
+  session: Session | null,
+  userId?: string | string[]
+) {
   return useQuery(
-    ['videos', session],
+    ['user-videos', userId],
     () => getVideosByUserId(session, userId),
     {
       enabled: !!session,
       keepPreviousData: true,
     }
   );
+}
+
+export function useVideos(session: Session | null, id?: string | string[]) {
+  return useQuery(['videos', id], () => getVideosById(session, id), {
+    enabled: !!session && !!id?.length,
+    keepPreviousData: true,
+  });
 }

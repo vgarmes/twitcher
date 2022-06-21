@@ -12,6 +12,6 @@ export function createProtectedRouter() {
       throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
     // infers that `session` is non-nullable to downstream procedures
-    return next({ ctx: { ...ctx, token: ctx.session } });
+    return next({ ctx: { ...ctx, session: ctx.session } });
   });
 }

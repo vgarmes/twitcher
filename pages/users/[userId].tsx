@@ -7,12 +7,13 @@ import useSWR, { useSWRConfig } from 'swr';
 import fetcher from '../../utils/fetcher';
 import { IUser, Videos } from '../../types';
 import useUserVideos from '../../hooks/twitch/useVideos';
+import { useSession } from 'next-auth/react';
 
 const User = () => {
   const router = useRouter();
   const { userId } = router.query;
-
-  const { data, error } = useUserVideos(userId);
+  const { data: session } = useSession();
+  const { data, error } = useUserVideos(session, userId);
 
   const { mutate } = useSWRConfig();
   const { data: user, error: userError } = useSWR<{ data: IUser }>(

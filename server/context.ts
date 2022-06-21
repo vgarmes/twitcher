@@ -21,7 +21,7 @@ import {
 export async function createContext(opts: trpcNext.CreateNextContextOptions) {
   const req = opts?.req;
   const res = opts?.res;
-  const session = opts && (await getServerSession(opts, authOptions));
+  const session = await getSession({ req });
 
   //return await createContextInner({ session });
   return { req, res, session };

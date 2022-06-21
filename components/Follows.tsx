@@ -2,9 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Loading from './Loading';
 import useFollows from '../hooks/twitch/useFollows';
+import { useSession } from 'next-auth/react';
 
 const Follows = () => {
-  const { data, error } = useFollows();
+  const { data: session } = useSession();
+  const { data, error } = useFollows(session);
 
   if (!data && !error) {
     return <Loading />;
