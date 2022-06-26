@@ -6,25 +6,22 @@ import axios from 'axios';
 import useSWR, { useSWRConfig } from 'swr';
 import fetcher from '../../utils/fetcher';
 import { IUser, Videos } from '../../types';
-import useUserVideos from '../../hooks/twitch/useVideos';
+import { useUserVideos } from '../../hooks/twitch/useVideos';
 import { useSession } from 'next-auth/react';
+import { trpc } from '../../utils/trpc';
 
 const User = () => {
   const router = useRouter();
   const { userId } = router.query;
   const { data: session } = useSession();
+  const { data: user, error: userError } = trpc.useQuery(['user.me'], {
+    enabled: !!session,
+  });
   const { data, error } = useUserVideos(session, userId);
 
   const { mutate } = useSWRConfig();
-  const { data: user, error: userError } = useSWR<{ data: IUser }>(
-    '/api/me',
-    fetcher
-  );
-  const mutateWatchLater = async (id: string) => {
-    if (!user?.data) {
-      return;
-    }
 
+  const mutateWatchLater = async (id: string) => {
     await axios.post(`/api/me/watchlater/${id}`);
     // trigger a revalidation (refetch)
     mutate('/api/me');
@@ -65,10 +62,8 @@ const User = () => {
                     duration={duration}
                     createdAt={created_at}
                     isWatchLater={
-                      user?.data?.watchLater
-                        ? user.data.watchLater.findIndex(
-                            (wl) => wl.videoId === id
-                          ) > -1
+                      user?.watchLater
+                        ? user.watchLater.findIndex((wl) => wl === id) > -1
                         : false
                     }
                     onAddWatchLater={(id) => mutateWatchLater(id)}

@@ -28,7 +28,7 @@ const WatchLater: NextPage<{}> = () => {
     mutate('/api/me/watchlater');
   };
 
-  if (userError || videosError) {
+  if (userError) {
     return (
       <div className="h-screen w-screen flex justify-center">
         <p className="text-lg">Ooops! Something went wrong...</p>
