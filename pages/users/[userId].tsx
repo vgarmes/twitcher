@@ -61,10 +61,9 @@ const User = () => {
                     duration={duration}
                     createdAt={created_at}
                     isWatchLater={
-                      false
-                      /* user?.watchLater?.length
-                        ? user.watchLater.findIndex((wl) => wl === id) > -1
-                        : false */
+                      user?.watchLater?.length
+                        ? user.watchLater.includes(id)
+                        : false
                     }
                     onAddWatchLater={(videoId) =>
                       addVideo.mutateAsync({ videoId })
