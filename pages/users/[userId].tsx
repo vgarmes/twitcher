@@ -12,20 +12,18 @@ import { trpc } from '../../utils/trpc';
 
 const User = () => {
   const router = useRouter();
+  const utils = trpc.useContext();
   const { userId } = router.query;
   const { data: session } = useSession();
   const { data: user, error: userError } = trpc.useQuery(['user.me'], {
     enabled: !!session,
   });
   const { data, error } = useUserVideos(session, userId);
-
-  const { mutate } = useSWRConfig();
-
-  const mutateWatchLater = async (id: string) => {
-    await axios.post(`/api/me/watchlater/${id}`);
-    // trigger a revalidation (refetch)
-    mutate('/api/me');
-  };
+  const addVideo = trpc.useMutation('user.add-video', {
+    async onSuccess() {
+      await utils.invalidateQueries(['user.me']);
+    },
+  });
 
   if (error) {
     return (
@@ -66,7 +64,9 @@ const User = () => {
                         ? user.watchLater.findIndex((wl) => wl === id) > -1
                         : false
                     }
-                    onAddWatchLater={(id) => mutateWatchLater(id)}
+                    onAddWatchLater={(videoId) =>
+                      addVideo.mutateAsync({ videoId })
+                    }
                   />
                 );
               }
