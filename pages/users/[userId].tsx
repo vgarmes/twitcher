@@ -19,6 +19,7 @@ const User = () => {
     enabled: !!session,
   });
   const { data, error } = useUserVideos(session, userId);
+  // TODO: optimistic update
   const addVideo = trpc.useMutation('user.add-video', {
     async onSuccess() {
       await utils.invalidateQueries(['user.me']);
@@ -60,9 +61,10 @@ const User = () => {
                     duration={duration}
                     createdAt={created_at}
                     isWatchLater={
-                      user?.watchLater
+                      false
+                      /* user?.watchLater?.length
                         ? user.watchLater.findIndex((wl) => wl === id) > -1
-                        : false
+                        : false */
                     }
                     onAddWatchLater={(videoId) =>
                       addVideo.mutateAsync({ videoId })
